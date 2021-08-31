@@ -44,8 +44,10 @@ def register():
 
     access_token = create_access_token(identity=user_info['uid'])
     user_collection.insert(user_info)
+    user_data = user_info
+    user_data.pop("_id")
 
-    return jsonify(msg='User is registered', access_token=access_token), 201
+    return jsonify(msg='User is registered', access_token=access_token, user=user_data,success="True"), 201
 
 
 @user.route('/login', methods=['POST'])
@@ -54,6 +56,7 @@ def login():
         return make_response('Missing JSON in request', 400)
     
     payload = request.json
+    print(payload)
     email = payload.get('email')
     password = payload.get('password')
 
@@ -65,7 +68,8 @@ def login():
     if user.get('password'):
         if check_password_hash(user.get('password'), password):
             access_token = create_access_token(identity=user.get('uid'))
-            return jsonify(msg='Login successful', access_token=access_token), 200
+            user.pop("_id")
+            return jsonify(msg='Login successful', access_token=access_token, user=user, success="True"), 200
 
         else:
             return make_response('Wrong credentials', 400)

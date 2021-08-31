@@ -16,7 +16,9 @@ mongo = PyMongo(app)
 
 
 from .users.users import user
+from .vehicle.vehicle import vehicle
 
 app.register_blueprint(user)
+app.register_blueprint(vehicle)
 
 from app import routes
