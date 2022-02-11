@@ -196,5 +196,18 @@ def mark_parking_space_active():
     }}
     
     parking_space_collection.update_one({"pid": payload.get("pid")},newValues)
+
+    parking_space = parking_space_collection.find_one({"pid": payload.get("pid")})
+    print(parking_space)
  
     return jsonify(msg="successfull updated", pid=payload.get("pid"), success=True), 200
+
+
+@user.route('/getActiveListings', methods=['GET'])
+def get_active_listings():
+    active_listings = list(parking_space_collection.find({"isActive": 1}))
+    for listing in active_listings:
+        listing.pop("_id")
+    
+    return jsonify(active_listings=active_listings, success=True), 200
+    
