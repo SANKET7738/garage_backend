@@ -1,6 +1,10 @@
+from pdb import post_mortem
+from platform import python_version
 from sre_constants import SUCCESS
 from tkinter import E
+from types import MethodDescriptorType
 from flask import Blueprint, request, jsonify, make_response
+from grpc import metadata_call_credentials
 from app import jwt, mongo
 from werkzeug.security import generate_password_hash, check_password_hash
 from app.utils.helper import * 
@@ -198,8 +202,7 @@ def mark_parking_space_active():
     parking_space_collection.update_one({"pid": payload.get("pid")},newValues)
 
     parking_space = parking_space_collection.find_one({"pid": payload.get("pid")})
-    print(parking_space)
- 
+    
     return jsonify(msg="successfull updated", pid=payload.get("pid"), success=True), 200
 
 

@@ -64,7 +64,36 @@ def addVehicle():
             return jsonify(msg="User not found", success=False), 400
         else:
             # user['carDetails'] = carDetails
-            user_collection.update_one({'uid': uid}, {'$set': {'carDetails': carDetails}})
-            return jsonify(msg="Vehicle details added", carDetails=carDetails), 200
+            if user.get("vehicle_list") == None:
+                vehicle_list = []
+                vehicle_list.append(carDetails)
+                user_collection.update_one({'uid': uid}, {'$set': {'vehicle_list': vehicle_list}})
+                return jsonify(msg="Vehicle details added", carDetails=carDetails), 200
+            else:
+                vehicle_list = user.get("vehicle_list")
+                vehicle_list.append(carDetails)
+                user_collection.update_one({'uid': uid}, {'$set': {'vehicle_list': vehicle_list}})
+                return jsonify(msg="Vehicle details added", carDetails=carDetails), 200
+
+
+
+@vehicle.route('/getUserVehicles', methods=['POST'])
+def get_user_vehicles():
+    if not request.is_json:
+        return make_response('Missing JSON in request', 400)
     
+    payload = request.json
+    uid = payload.get("uid")
+    if not uid:
+        return make_response("Missing uid", 400)
+    
+    user_details = user_collection.find_one({"uid": uid})
+    vehicle_list = user_details.get("vehicle_list")
+    if not vehicle_list:
+        vehicle_list = []
+        return jsonify(msg="No vehicles", vehicle_list=vehicle_list, success=True),200
+    else:
+        return jsonify(vehicle_list=vehicle_list, success=True), 200
+    
+
 
