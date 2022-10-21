@@ -63,7 +63,6 @@ def addVehicle():
         if not user:
             return jsonify(msg="User not found", success=False), 400
         else:
-            # user['carDetails'] = carDetails
             if user.get("vehicle_list") == None:
                 vehicle_list = []
                 vehicle_list.append(carDetails)

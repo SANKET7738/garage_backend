@@ -15,8 +15,8 @@ import os
 from werkzeug.utils import secure_filename
 from firebase_admin import credentials, initialize_app, storage
 
-cred = credentials.Certificate("garage-4a443-cebfff850cea.json")
-initialize_app(cred, {'storageBucket': 'garage-4a443.appspot.com'})
+cred = credentials.Certificate("YOUR_SECRET_KEY")
+initialize_app(cred, {'storageBucket': 'YOUR_BUCKET_NAME'})
 
 user_collection = mongo.db.users
 parking_space_collection = mongo.db.parkingSpaces
@@ -69,7 +69,6 @@ def login():
         return make_response('Missing JSON in request', 400)
     
     payload = request.json
-    print(payload)
     email = payload.get('email')
     password = payload.get('password')
 
